@@ -38,19 +38,15 @@ export class PostDetailPage extends React.Component {
     this.props.editPostRequest(this.state);
   };
 
-  render() {
+  renderPost = () => {
     return (
-      <div>
-        <Helmet title={this.props.post.title} />
-        <a className={styles['edit-post-button']} href="#" onClick={this.props.toggleEditPost}><FormattedMessage id="editPost" /></a>
-        {
-          this.props.showEditPost
-            ? this.renderPostForm()
-            : this.renderPost()
-        }
+      <div className={`${styles['single-post']} ${styles['post-detail']}`}>
+        <h3 className={styles['post-title']}>{this.props.post.title}</h3>
+        <p className={styles['author-name']}><FormattedMessage id="by" /> {this.props.post.name}</p>
+        <p className={styles['post-desc']}>{this.props.post.content}</p>
       </div>
     );
-  }
+  };
 
   renderPostForm = () => {
     return (
@@ -64,15 +60,19 @@ export class PostDetailPage extends React.Component {
     );
   };
 
-  renderPost = () => {
+  render() {
     return (
-      <div className={`${styles['single-post']} ${styles['post-detail']}`}>
-        <h3 className={styles['post-title']}>{this.props.post.title}</h3>
-        <p className={styles['author-name']}><FormattedMessage id="by" /> {this.props.post.name}</p>
-        <p className={styles['post-desc']}>{this.props.post.content}</p>
+      <div>
+        <Helmet title={this.props.post.title} />
+        <a className={styles['edit-post-button']} href="#" onClick={this.props.toggleEditPost}><FormattedMessage id="editPost" /></a>
+        {
+          this.props.showEditPost
+            ? this.renderPostForm()
+            : this.renderPost()
+        }
       </div>
     );
-  };
+  }
 }
 
 function mapDispatchToProps(dispatch, props) {
@@ -81,7 +81,7 @@ function mapDispatchToProps(dispatch, props) {
     editPostRequest: (post) => dispatch(editPostRequest(props.params.cuid, post)),
   };
 }
-
+// Retrieve data from store as props
 function mapStateToProps(state, props) {
   return {
     post: getPost(state, props.params.cuid),
@@ -92,13 +92,6 @@ function mapStateToProps(state, props) {
 PostDetailPage.need = [params => {
   return fetchPost(params.cuid);
 }];
-
-// Retrieve data from store as props
-function mapStateToProps(state, props) {
-  return {
-    post: getPost(state, props.params.cuid),
-  };
-}
 
 PostDetailPage.propTypes = {
   post: PropTypes.shape({
